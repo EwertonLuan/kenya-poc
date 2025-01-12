@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import { InstallPrompt } from './InstallPrompt';
 
 export default function Page() {
   return (
@@ -71,6 +72,7 @@ export default function Page() {
           </a>
         </div>
       </div>
+      <InstallPrompt/>
     </div>
   );
 }
