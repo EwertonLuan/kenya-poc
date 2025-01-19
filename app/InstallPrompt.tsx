@@ -60,7 +60,6 @@ export function InstallPrompt() {
   
     return (
       <div>
-        <h3>Install App</h3>
         {deferredPrompt && <button onClick={handleInstallClick}>Install</button>}
       </div>
     );
