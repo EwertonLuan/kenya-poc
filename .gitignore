@@ -37,3 +37,7 @@ yarn-error.log*
 .env*.local
 
 certificates
+
+# Serwist
+public/sw*
+public/swe-worker*
