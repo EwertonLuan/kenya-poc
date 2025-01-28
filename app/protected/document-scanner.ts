@@ -57,11 +57,14 @@ export interface Point {
         points = this.detect(source);
       }
       let warpedDst = new cv.Mat();
+      
       if (!width) {
-        width = Math.max(this.distance(points[0],points[1]),this.distance(points[2],points[3]));
+        width = Math.max(this.distance(points[0], points[1]), this.distance(points[2], points[3])) * 2;
+        // width = Math.max(this.distance(points[0],points[1]),this.distance(points[2],points[3]));
       }
       if (!height) {
-        height = Math.max(this.distance(points[0],points[3]),this.distance(points[1],points[2]));
+        // height = Math.max(this.distance(points[0],points[3]),this.distance(points[1],points[2]));
+        height = Math.max(this.distance(points[0], points[3]), this.distance(points[1], points[2])) * 2;
       }
       let dsize = new cv.Size(width, height);
       let srcTri = cv.matFromArray(4, 1, cv.CV_32FC2, [
@@ -87,7 +90,13 @@ export interface Point {
       ]);
   
       let M = cv.getPerspectiveTransform(srcTri, dstTri);
-      cv.warpPerspective(img,warpedDst,M,dsize,cv.INTER_LINEAR,
+      cv.warpPerspective(
+        img,
+        warpedDst,
+        M,
+        dsize,
+        // better quality
+        cv.INTER_CUBIC,
         cv.BORDER_CONSTANT,
         new cv.Scalar()
       );

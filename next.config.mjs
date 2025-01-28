@@ -10,7 +10,7 @@ const withSerwist = withSerwistInit({
   cacheOnNavigation: true,
   swSrc: "app/sw.ts",
   swDest: "public/sw.js",
-  additionalPrecacheEntries: [{ url: "/protected", revision }],
+  // additionalPrecacheEntries: [{ url: "/protected", revision }],
 });
 
 /** @type {import("next").NextConfig} */

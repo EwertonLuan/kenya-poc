@@ -26,14 +26,26 @@ export default function DocumentScannerComponent() {
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (file) {
+      const img = new Image();
       const reader = new FileReader();
       reader.onload = (e) => {
-        setOriginalImage(e.target?.result as string); // Update the original image
-        setCroppedImage(null); // Reset the cropped image
+        img.src = e.target?.result as string;
+      };
+      img.onload = () => {
+        const canvas = document.createElement("canvas");
+        canvas.width = img.width;
+        canvas.height = img.height;
+        const ctx = canvas.getContext("2d");
+        if (ctx) {
+          ctx.drawImage(img, 0, 0);
+          const dataUrl = canvas.toDataURL("image/png"); // Higher quality PNG output
+          setOriginalImage(dataUrl);
+          setCroppedImage(null); // Reset the cropped image
+        }
       };
       reader.readAsDataURL(file);
     }
-  };
+  }
 
   const handleDetectAndCrop = () => {
     if (!opencvLoaded || !originalImage || !imageRef.current) {
@@ -96,7 +108,6 @@ export default function DocumentScannerComponent() {
     <div className="flex flex-col items-center space-y-4">
       <h1 className="text-xl font-bold">Document Scanner</h1>
 
-      {!isCameraActive && (
         <input
           type="file"
           accept="image/*"
@@ -104,7 +115,6 @@ export default function DocumentScannerComponent() {
           capture="environment"
           className="mb-4"
         />
-      )}
 
       {isCameraActive && (
         <div className="relative">
@@ -118,32 +128,34 @@ export default function DocumentScannerComponent() {
         </div>
       )}
 
-      <div className="flex space-x-4">
-        {originalImage && (
-          <div>
-            <h2 className="text-lg font-semibold">Original Image</h2>
-            <img
-              ref={imageRef}
-              src={originalImage}
-              alt="Uploaded"
-              className="max-w-xs border"
-            />
-          </div>
-        )}
-
+      <div className="flex flex-wrap justify-center gap-4">
+          {originalImage && (
+            <div className="relative max-w-full max-h-[70vh] overflow-auto border rounded">
+              <h2 className="text-lg font-semibold text-center">Original Image</h2>
+              <img
+                ref={imageRef}
+                src={originalImage}
+                alt="Uploaded"
+                className="w-full h-auto"
+              />
+            </div>
+          )}
         {croppedImage && (
-          <div>
-            <h2 className="text-lg font-semibold">Cropped Image</h2>
-            <canvas
-              ref={(el) => {
-                if (el && croppedImage) {
-                  el.replaceWith(croppedImage); // Replace with the cropped canvas
-                }
-              }}
-              className="border"
-            />
+          <div className="relative max-w-full max-h-[70vh] overflow-auto border rounded">
+            <h2 className="text-lg font-semibold text-center">Cropped Image</h2>
+            <div className="w-full h-auto">
+              <canvas
+                ref={(el) => {
+                  if (el && croppedImage) {
+                    el.replaceWith(croppedImage); // Replace with the cropped canvas
+                  }
+                }}
+                className="w-full h-auto border"
+              />
+            </div>
           </div>
         )}
+        
       </div>
 
       <div className="space-x-4">
