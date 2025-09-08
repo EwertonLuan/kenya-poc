@@ -7,7 +7,7 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "@serwist/next": "^9.0.11",
+    "@serwist/next": "^9.2.1",
     "@types/react": "^18.2.45",
     "@types/react-dom": "^18.2.18",
     "bcrypt-ts": "^5.0.0",
